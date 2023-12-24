@@ -20,5 +20,13 @@ export default defineConfig({
       '@': resolve(__dirname, 'src')
     }
   },
-
+  server: {
+    // 代理配置
+    proxy: {
+      '/api': { 
+        target: '127.0.0.1:3007', // 目标地址 --> 服务器地址
+        changeOrigin: true, // 允许跨域
+      }
+    }
+  }
 })

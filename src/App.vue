@@ -1,5 +1,6 @@
 <script setup >
 import Header from '@/components/Header/Header.vue';
+
 </script>
 
 <template>
@@ -9,5 +10,4 @@ import Header from '@/components/Header/Header.vue';
   </router-view>
 </template>
 
-<style scoped>
-</style>
+<style scoped></style>

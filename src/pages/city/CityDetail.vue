@@ -4,7 +4,7 @@
       <section class="city-environment">
         <div class="header">
           <div class="city-name">
-            <h2 ref="title">{{ route.query.city ?? "北京" }}</h2>
+            <h2 ref="title">{{ cityName ?? "北京" }}</h2>
             <p>城市双碳指数</p>
           </div>
           <div class="search-container">
@@ -17,8 +17,8 @@
           </div>
         </div>
         <div class="section-content">
-          <ChartCities class="city-map" :city="city"></ChartCities>
-          <ChartCarbonIndex class="city-chart" :city="city"></ChartCarbonIndex>
+          <ChartCities class="city-map"></ChartCities>
+          <ChartCarbonIndex class="city-chart"></ChartCarbonIndex>
         </div>
       </section>
       <SectionContainer title="气候雄心" icon="target">
@@ -45,10 +45,12 @@
 </template>
 
 <script setup>
-import { ref, computed, onMounted } from 'vue'
+import { ref, watch } from 'vue'
 import { useRouter, useRoute } from 'vue-router'
 import { storeToRefs } from 'pinia'
-import useCityDetailStore from '@/store/cityDetail.js'
+import useCityDetailStore from '@/store/cityDetail'
+import useCitiesStore from '@/store/cities'
+
 import ChartCarbonIndex from './components/Charts/ChartCarbonIndex.vue'
 import ChartCities from './components/Charts/ChartCities.vue'
 import TargetCircle from './components/TargetCircle.vue'
@@ -62,27 +64,42 @@ const router = useRouter()
 const route = useRoute()
 
 const inputValue = ref('')
-const city = computed(() => {
-  return route.query.city ?? "北京"
-})
+
+
+
 const cityDetailStore = useCityDetailStore()
-// 更新仓库中数据
+const cityiesStore = useCitiesStore()
+
+
+/**
+ * 更新城市信息
+ * @function
+ * @memberOf cityDetailStore
+ * @param {string} city - 城市名称
+ * @returns {void}
+ */
 const updateCity = cityDetailStore.updateCity
-const { carbonTargrt } = storeToRefs(cityDetailStore)
+const { carbonTargrt,cityName } = storeToRefs(cityDetailStore)
+const { cities } = storeToRefs(cityiesStore)
+
+watch(() => route.query.city, (newValue) => {
+  updateCity(newValue)
+},{immediate:true})
 
 function pushWithQuery() {
-  updateCity(city.value)
-  router.push({
-    name: "cityDetail",
-    query: {
-      city: inputValue.value
-    }
-  })
-
+  if (!cities.value.includes(inputValue.value)) {
+    return ElMessage({
+      type: "error", message: "非法查询或输入城市不存在"
+    })
+  } else {
+    router.push({
+      name: "cityDetail",
+      query: {
+        city: inputValue.value
+      }
+    })
+  }
 }
-onMounted(() => {
-  updateCity()
-})
 
 </script>
 
@@ -136,7 +153,7 @@ onMounted(() => {
     }
   }
 
-  
+
   .carbon-state {
     grid-template-rows: 280px;
   }
@@ -146,7 +163,8 @@ onMounted(() => {
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 40px;
-  &.carbon-state{
+
+  &.carbon-state {
     grid-template-rows: 280px;
     grid-auto-rows: 280px;
   }

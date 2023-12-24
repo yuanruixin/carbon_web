@@ -1,23 +1,24 @@
 import { defineStore } from 'pinia';
-import { ref } from 'vue'
+import { ref ,computed} from 'vue'
 import { getAllCityIndex } from "@/api/index"
 const useCitiesStore = defineStore('cities', () => {
   // 所有城市的双碳指数数据
-  const carbonIndexes = ref({
-    cities: [],
-    values: []
+  const citiesIndex = ref([
+    {city:"深圳",score:76.02}
+  ])
+  const cities = computed(()=>{
+    return citiesIndex.value.map(item=>item.city)
   })
-
   async function updateStore() {
     await getAllCityIndex().then(
       (res) => {
-        carbonIndexes.value = res.data
+        citiesIndex.value = res.data
       }
     )
   }
   return {
-    carbonIndexes,
-
+    citiesIndex,
+    cities,
     updateStore
   }
 })

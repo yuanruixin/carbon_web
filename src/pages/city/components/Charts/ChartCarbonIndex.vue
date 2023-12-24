@@ -7,27 +7,24 @@
 
 <script setup>
 import { onMounted, watch,ref } from 'vue'
+import {storeToRefs} from 'pinia'
 import { Chart } from '@antv/g2';
+import useCityDetailStore from "@/store/cityDetail.js"
 import { getCarbonIndex } from "@/api/index.js"
-const props = defineProps({
-  city:{
-    type:String,
-    default:'北京'
-  }
-})
+
+const cityDetail = useCityDetailStore()
+const {cityIndexData,cityName} = storeToRefs(cityDetail)
 
 let chart = ref(null)
 
-async function getCityData(city = "北京") {
-  let res = await getCarbonIndex(city)
-  const { nameArr, qzArr, seriesData } = res.data
-
+async function getCityData() {
+  const { nameArr, qzArr, seriesData } = cityIndexData.value
   return nameArr.map((item, index) => ({ "item": `${nameArr[index]}\n(${qzArr[index]})`, "得分": seriesData[index] }))
 }
 
-watch(() => props.city
-  , (newValue) => {
-    getCityData(newValue).then(data => {
+watch(() => cityIndexData.value
+  , (v) => {
+    getCityData(cityName.value).then(data => {
       chart.changeData(data)
     })
   })
@@ -82,7 +79,7 @@ function initChart(data) {
 }
 
 onMounted(() => {
-  getCityData(props.city).then(data => {
+  getCityData(cityName.value).then(data => {
     initChart(data)
   })
 

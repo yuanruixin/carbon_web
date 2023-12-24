@@ -2,8 +2,12 @@ import { createRouter, createWebHistory } from 'vue-router'
 
 const routes = [
   {
-    path: '/home',
-    component: () => import("@/pages/home/Home.vue")
+    path:"/home",
+    component:()=>import("@/pages/home/Home.vue")
+  },
+  {
+    path: '/map',
+    component: () => import("@/pages/map/Map.vue")
   },
   {
     name:"cityDetail",
@@ -15,7 +19,7 @@ const routes = [
   },
   {
     path: '/',
-    redirect: '/home'
+    redirect: '/map'
   }
 ]
 

@@ -1,11 +1,11 @@
 <template>
   <div>
-    地图页
+      <ChinaMap></ChinaMap>
   </div>
 </template>
 
 <script setup>
-
+  import ChinaMap from './components/ChinaMap.vue';
 </script>
 
 <style lang="scss" scoped>

@@ -14,7 +14,6 @@ const cityDetailStore = useCityDetailStore()
 const {co2GdpData} = storeToRefs(cityDetailStore)
 
  watch(()=>co2GdpData.value,(newValue,oldvalue)=>{
-   console.log(co2GdpData.value)
    const {xgdpdata,ygdpdata,yperdata_avg} = co2GdpData.value
    const chartData =  xgdpdata.map((item,index)=>({year:xgdpdata[index],"value":ygdpdata[index]}))
    initChart(chartData)

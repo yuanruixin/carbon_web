@@ -1,6 +1,6 @@
 import { defineStore } from 'pinia';
 import { ref } from 'vue'
-import { getCarbonIndex, getCityState } from '@/api'
+import { getCarbonIndex, getCityState,getCityAmbition } from '@/api'
 const useCityDetailStore = defineStore('cityDetail', () => {
   // 当前查询城市
   const cityName = ref("北京")
@@ -43,13 +43,18 @@ const useCityDetailStore = defineStore('cityDetail', () => {
     cityName.value = city
     const indexRes = await getCarbonIndex(city)
     cityIndexData.value = indexRes.data
+    // 城市低碳状态数据
     const cityStateRes = await getCityState(city)
-    const { energy, xco2data, yco2data, yperdata, yperdata_avg, xgdpdata, ygdpdata, ygdpdata_avg, } = cityStateRes.data
+    const { energy, xco2data, yco2data, yperdata, yperdata_avg, xgdpdata, ygdpdata, ygdpdata_avg } = cityStateRes.data
     clearEnergy.value = energy
     co2Data.value = { xco2data, yco2data }
     co2PerData.value = { xco2data, yperdata, yperdata_avg }
     co2GdpData.value = { xgdpdata, ygdpdata, ygdpdata_avg }
+    // 城市气候雄心数据（碳达峰及碳中和目标年）
+    const ambitionRes =  await getCityAmbition(city)
+    carbonTargrt.value = ambitionRes.data
   }
+  
   return {
     cityName,
     cityIndexData,

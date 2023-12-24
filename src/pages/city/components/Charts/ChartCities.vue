@@ -10,35 +10,24 @@ import { onMounted, watch, computed } from 'vue'
 import { storeToRefs } from 'pinia'
 import { Chart } from '@antv/g2';
 import useCitiesStore from '@/store/cities';
-const props = defineProps({
-  city: {
-    type: String,
-    default: '北京'
-  }
-})
 
+import useCityDetailStore from '@/store/cityDetail'
+
+const cityDetailStore = useCityDetailStore()
 const citiesStore = useCitiesStore()
 // 初始化仓库数据函数
-const updateStore =  citiesStore.updateStore
-
+const updateStore = citiesStore.updateStore
+updateStore()
 // 仓库数据
-const { carbonIndexes } = storeToRefs(citiesStore)
+const { citiesIndex } = storeToRefs(citiesStore)
+const {cityName} = storeToRefs(cityDetailStore)
 
-async function initChartData(){
-  await updateStore()
-  const { cities, values } = carbonIndexes.value
-  return cities.map((item, index) => ({ "城市": cities[index], "双碳指数": values[index] }))
-}
-
-
-
-watch(() => props.city, () => {
-  initChartData()
-    .then((data) => {
-      initChart(data, props.city)
-    })
+// 更新表中数据
+watch(() => [citiesIndex.value,cityName.value], (newValue) => {
+  initChart(newValue[0], newValue[1])
 })
 
+// 传入数据，并使当前城市高亮
 function initChart(data, currentCity) {
   const chart = new Chart({
     container: 'bg-chart',
@@ -54,11 +43,11 @@ function initChart(data, currentCity) {
   chart
     .interval()
     .data(data)
-    .encode('x', '城市')
-    .encode('y', '双碳指数')
+    .encode('x', 'city')
+    .encode('y', 'score')
     .style('fill', (datum, index, data) => {
-      if (datum["城市"] === currentCity) {
-        return getColor(datum["双碳指数"])
+      if (datum["city"] === currentCity) {
+        return getColor(datum["score"])
       };
       return '#78c9f5';
     });
@@ -75,10 +64,8 @@ function getColor(v) {
 }
 
 onMounted(() => {
-  initChartData()
-    .then((data) => {
-      initChart(data, props.city)
-    })
+
+      initChart(citiesIndex.value, "北京")
 })
 </script>
 
