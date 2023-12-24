@@ -1,6 +1,6 @@
 <template>
   <div class="side-pannel" :class="{ 'show-slide-pannel': showMenu }">
-    <el-scrollbar>
+    <el-scrollbar max-height="800px">
       <el-card class="side-content">
         <template #header>
           <div class="card-header">
@@ -30,7 +30,18 @@
           </div>
           <el-button type="primary" class="submit-btn" @click="sumbmitOption">筛选</el-button>
         </div>
-        <template #footer>数据来源介绍：</template>
+        <template #footer>
+          <div class="data-source">
+            <h4>数据及来源介绍</h4>
+            <p class="caption"><b>净初级生产力</b>:NPP 即 Net primary productivity表示植被所固定的有机碳中扣除本身呼吸消耗的部分，也称净第一性生产力。NPP反映了植物固定和转化
+              光合产物的效率，也决定了可供异养生物（包括各种动物和人）利用的物质和能量。</p>
+            <p class="caption">
+              通过使用谷歌地球引擎(Google Earth Engine,GEE)平台中的MODIS NPP数据集，对2010-2022年全国NPP图像
+              进行预处理。预处理包括调用NPP数据集、转换波段单元、影像裁剪。
+            </p>
+          </div>
+
+        </template>
       </el-card>
     </el-scrollbar>
     <el-button :icon="showMenu ? ArrowLeftBold : ArrowRightBold" class="arrow-btn" @click="showMenu = !showMenu" />
@@ -89,6 +100,8 @@ function sumbmitOption() {
   .side-content {
     height: 100%;
     overflow: auto;
+    height: max-height(800px);
+    overflow-y: auto;
   }
 }
 
@@ -112,5 +125,13 @@ function sumbmitOption() {
   top: 12px;
   left: 100%;
   padding: 20px 6px;
+}
+
+.data-source {
+  line-height: 1.25;
+  .caption{
+    font-size: 13px;
+    color: gray;
+  }
 }
 </style>

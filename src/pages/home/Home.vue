@@ -1,6 +1,44 @@
 <template>
-  <div>
-    地图页
+  <div class="container">
+    <section class="image"
+      style="background-image: url(https://images.unsplash.com/photo-1504357121897-47698286288d?ixlib=rb-0.3.5&amp;ixid=eyJhcHBfaWQiOjEyMDd9&amp;s=29c6dcd6a6f6c6a76c101e4336ae7c2d&amp;auto=format&amp;fit=crop&amp;w=2851&amp;q=80)">
+    </section>
+    <section class="heading">
+      <h1>So green!</h1>
+    </section>
+    <section class="text" style="--bg: #c8c8bc">
+      <h1>Armenian highlands</h1>
+    </section>
+    <section class="image"
+      style="background-image: url(https://images.unsplash.com/photo-1538964173425-93884d739596?ixlib=rb-0.3.5&amp;ixid=eyJhcHBfaWQiOjEyMDd9&amp;s=e2f0390d79969aaf31e155bd1f7138b0&amp;auto=format&amp;fit=crop&amp;w=1275&amp;q=80)">
+    </section>
+    <section class="heading">
+      <h1>Hot! hot! hot!</h1>
+    </section>
+    <section class="text" style="--bg: #638a87">
+      <h1>Paradise on earth</h1>
+    </section>
+    <section class="image"
+      style="background-image: url(https://images.unsplash.com/photo-1531306728370-e2ebd9d7bb99?ixlib=rb-0.3.5&amp;s=2950e56dc2bba8a65b82f130aa4e47ea&amp;auto=format&amp;fit=crop&amp;w=900&amp;q=60)">
+    </section>
+    <section class="heading">
+      <h1>In a galaxy...</h1>
+    </section>
+    <section class="text" style="--bg: #384558">
+      <h1>Far, far away...</h1>
+    </section>
+    <section class="image"
+      style="background-image: url(https://images.unsplash.com/photo-1538982198821-0714ff3d74ba?ixlib=rb-0.3.5&amp;s=0550cf3351896481de327a10971739f1&amp;auto=format&amp;fit=crop&amp;w=1251&amp;q=80)">
+    </section>
+    <section class="heading">
+      <h1>Suits..</h1>
+    </section>
+    <section class="text" style="--bg: #9dbdc4">
+      <h1>Up into the sky</h1>
+    </section>
+    <div class="footer">
+      <h3>Pretty cool right?</h3>
+    </div>
   </div>
 </template>
 
@@ -9,5 +47,54 @@
 </script>
 
 <style lang="scss" scoped>
+.container {
+  height: calc(100vh - 60px);
+  overflow: hidden;
+  overflow-y: auto;
+  perspective: 3px;
+}
 
-</style>
+section {
+  background-size: cover;
+  color: white;
+  background-color: var(--bg, --color-black);
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  &.image {
+    background-position: center center;
+    transform: translateZ(-1px) scale(1.5);
+    /* Force the background image to fill the whole element. */
+    background-size: cover;
+    /* Keep the image from overlapping sibling elements. */
+    z-index: -1;
+    height: 100vh;
+  }
+
+  &.text {
+    height: 50vh;
+  }
+
+  &.heading {
+    z-index: -1;
+    transform: translateY(-30vh) translateZ(1px) scale(1.5);
+  }
+}
+
+.footer {
+  position: relative;
+  display: block;
+  background-color: black;
+  height: 100vh;
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  h3 {
+    font-weight: normal;
+    color: var(--color-blue);
+  }
+}</style>

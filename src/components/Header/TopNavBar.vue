@@ -5,7 +5,7 @@
       :index.string="''+index" 
       :key="index">
       
-      <router-link :to="item.path">{{ item.text }}</router-link>
+      <router-link :to="item.path" class="tab-item">{{ item.text }}</router-link>
     </el-menu-item>
   </el-menu>
 </template>
@@ -33,4 +33,9 @@ watch(() => route.path,(newPath)=>{
 
 </script>
 
-<style scoped></style>
+<style scoped>
+.tab-item{
+  font-family:"HanHei SC", "PingFang SC", "STHeitiSC-Light", "Microsoft YaHei";
+  color:rgba(128, 128, 128, 0.825);
+}
+</style>
