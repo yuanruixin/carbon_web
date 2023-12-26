@@ -29,6 +29,7 @@ const props = defineProps({
     position: absolute;
     top: 0;
     left: 50%;
+    transform:translate(-50%,0);
     translate: -50% 0;
     width: max-content;
     padding: 20px;
