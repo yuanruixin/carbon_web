@@ -30,13 +30,15 @@
       <SectionContainer title="低碳状态" icon="status">
         <div class="section-content  carbon-state">
           <!-- 总碳排放量直方图 -->
-          <ChartCarbonTotal />
+          <ChartCarbonTotal class="chart"/>
           <!-- 能源结构扇形图 -->
-          <PieEnergyStruct />
+          <PieEnergyStruct class="chart"/>
           <!-- 人均碳排放直方图 -->
-          <ChartCarbonPer />
+          <ChartCarbonPer class="chart" />
           <!-- 单位GDP碳排放直方图 -->
-          <ChartCarbonPerGdp />
+          <ChartCarbonPerGdp class="chart"/>
+          <!-- 碳排放趋势折线图 -->
+          <ChartEmissionTrend class="chart"/>
         </div>
       </SectionContainer>
     </div>
@@ -59,6 +61,7 @@ import ChartCarbonTotal from "./components/Charts/ChartCarbonTotal.vue"
 import PieEnergyStruct from "./components/Charts/PieEnergyStruct.vue"
 import ChartCarbonPer from "./components/Charts/ChartCarbonPer.vue"
 import ChartCarbonPerGdp from "./components/Charts/ChartCarbonPerGdp.vue"
+import ChartEmissionTrend from './components/Charts/ChartEmissionTrend.vue'
 
 const router = useRouter()
 const route = useRoute()
@@ -114,8 +117,8 @@ function pushWithQuery() {
   row-gap: 40px;
 
   section {
-    margin: 0 200px;
-    padding: 32px 50px;
+    margin: 0 clamp(10px,5vw,200px);
+    padding: clamp(10px,10vh,32px) clamp(10px,5vw,50px);
     box-shadow: rgba(14, 92, 254, 0.2) 0 1px 16px 4px;
     border-radius: 20px;
     background-color: #fff;
@@ -127,46 +130,49 @@ function pushWithQuery() {
 
   .header {
     display: grid;
-    grid-template-columns: repeat(2, max-content);
+    grid-template-columns: repeat(auto-fit,minmax(200px,1fr));
     align-items: center;
     justify-content: space-between;
-
+    justify-items: start;
+    column-gap: 40px;
     .city-name {
+      max-width: 300px;
+      font-size: clamp(12px,4vw,20px);
       display: flex;
       flex-direction: column;
       align-items: center;
 
       h2 {
-        font-size: 40px;
+        font-size: 2em;
       }
 
       p {
-        font-size: 20px;
+        font-size: 1em;
       }
     }
 
     .search-container {
+      justify-self: end;
+      max-width: 300px;
       display: grid;
-      grid-template-columns: repeat(2, max-content);
+      grid-template-columns: repeat(2,minman(200px,1fr));
       align-items: center;
       column-gap: 24px;
     }
   }
 
-
-  .carbon-state {
-    grid-template-rows: 280px;
-  }
 }
 
 .section-content {
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: repeat(auto-fit,minmax(max(30vw,200px),1fr));
   gap: 40px;
-
-  &.carbon-state {
-    grid-template-rows: 280px;
-    grid-auto-rows: 280px;
+  .chart{
+    justify-self: center;
+    width: 80%;
+    aspect-ratio: 1 / 1;
   }
+
 }
+
 </style>

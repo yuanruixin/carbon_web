@@ -6,22 +6,30 @@
 </template>
 
 <script setup>
-import { watch, } from 'vue'
+import { watch, onMounted,computed} from 'vue'
 import { storeToRefs } from 'pinia'
 import { Chart } from "@antv/g2"
 import useCityDetailStore from "@/store/cityDetail.js"
 const cityDetailStore = useCityDetailStore()
 const { clearEnergy } = storeToRefs(cityDetailStore)
 
-watch(() => clearEnergy.value, () => {
-  const chartData = [
+let chart = null
+const chartData = computed(()=>{
+
+  return [
     { name: "非化石能源", value: clearEnergy.value, },
     { name: "其他", value: 1 - clearEnergy.value }]
-  initChart(chartData)
+})
+watch(() => chartData.value, (newValue) => {
+ 
+  initChart(newValue)
 })
 
 function initChart(data) {
-  const chart = new Chart({
+  if(chart){
+    chart.data(data)
+  }
+  chart = new Chart({
     container: 'energy-pie',
     autoFit: true,
   });
@@ -50,12 +58,12 @@ function initChart(data) {
   chart.render();
 
 }
-
+onMounted(()=>{
+  initChart(chartData.value)
+})
 
 </script>
 
 <style lang="scss" scoped>
-#energy-pie {
-  height: 100%;
-}
+
 </style>

@@ -1,44 +1,26 @@
 <template>
   <div class="container">
-    <section class="image"
-      style="background-image: url(https://images.unsplash.com/photo-1504357121897-47698286288d?ixlib=rb-0.3.5&amp;ixid=eyJhcHBfaWQiOjEyMDd9&amp;s=29c6dcd6a6f6c6a76c101e4336ae7c2d&amp;auto=format&amp;fit=crop&amp;w=2851&amp;q=80)">
-    </section>
+    <section class="image bg1"></section>
     <section class="heading">
-      <h1>So green!</h1>
+      <h1>守护美好家园</h1>
     </section>
     <section class="text" style="--bg: #c8c8bc">
-      <h1>Armenian highlands</h1>
+      <h2>
+        气候变化是一项跨国界的全球性挑战，这从来是一个人或一个国家的事，而是与我们每个人息息相关。它正在影响每个大洲的各个国家，扰乱国家经济发展并影响人民的生活，未来的代价甚至更为沉重。我们能做的只有，团结合作起来，一起守护好地球家园。
+      </h2>
     </section>
-    <section class="image"
-      style="background-image: url(https://images.unsplash.com/photo-1538964173425-93884d739596?ixlib=rb-0.3.5&amp;ixid=eyJhcHBfaWQiOjEyMDd9&amp;s=e2f0390d79969aaf31e155bd1f7138b0&amp;auto=format&amp;fit=crop&amp;w=1275&amp;q=80)">
+    <section class="image bg2">
     </section>
     <section class="heading">
-      <h1>Hot! hot! hot!</h1>
+      <h1>了解中国行动</h1>
     </section>
     <section class="text" style="--bg: #638a87">
-      <h1>Paradise on earth</h1>
+      <h2>中国正在全球气候治理中发挥重要参与者、贡献者和引领者的作用。2020年9月22日习近平主席在第七十五届联合国大会上提出力争2030年前实现碳达峰、2060年实现碳中和的目标。“双碳”目标的提出，是中国对世界发出的庄严承诺，也是中国积极应对全球气候危机、着力推动构建人类命运共同体的担当体现。</h2>
     </section>
-    <section class="image"
-      style="background-image: url(https://images.unsplash.com/photo-1531306728370-e2ebd9d7bb99?ixlib=rb-0.3.5&amp;s=2950e56dc2bba8a65b82f130aa4e47ea&amp;auto=format&amp;fit=crop&amp;w=900&amp;q=60)">
-    </section>
-    <section class="heading">
-      <h1>In a galaxy...</h1>
-    </section>
-    <section class="text" style="--bg: #384558">
-      <h1>Far, far away...</h1>
-    </section>
-    <section class="image"
-      style="background-image: url(https://images.unsplash.com/photo-1538982198821-0714ff3d74ba?ixlib=rb-0.3.5&amp;s=0550cf3351896481de327a10971739f1&amp;auto=format&amp;fit=crop&amp;w=1251&amp;q=80)">
-    </section>
-    <section class="heading">
-      <h1>Suits..</h1>
-    </section>
-    <section class="text" style="--bg: #9dbdc4">
-      <h1>Up into the sky</h1>
-    </section>
-    <div class="footer">
-      <h3>Pretty cool right?</h3>
-    </div>
+    
+    <footer class="footer">
+
+    </footer>
   </div>
 </template>
 
@@ -47,6 +29,13 @@
 </script>
 
 <style lang="scss" scoped>
+h1{
+  font-size: clamp(16px,5vw,30px);
+}
+h2{
+  line-height: 1.5;
+  font-size: clamp(16px,5vw,20px);
+}
 .container {
   height: calc(100vh - 60px);
   overflow: hidden;
@@ -56,6 +45,7 @@
 
 section {
   background-size: cover;
+  background-position: center;
   color: white;
   background-color: var(--bg, --color-black);
   position: relative;
@@ -66,35 +56,27 @@ section {
   &.image {
     background-position: center center;
     transform: translateZ(-1px) scale(1.5);
-    /* Force the background image to fill the whole element. */
     background-size: cover;
-    /* Keep the image from overlapping sibling elements. */
     z-index: -1;
-    height: 100vh;
+    height: calc(100vh - 60px);
   }
 
   &.text {
     height: 50vh;
+    padding: 0 clamp(10px,10vw,200px);
+  
   }
 
   &.heading {
     z-index: -1;
-    transform: translateY(-30vh) translateZ(1px) scale(1.5);
+    transform: translateY(-40vh) translateZ(1px) scale(1.5);
   }
 }
+.bg1{
+  background-image: url("./assets/bg2.png");
+}
+.bg2{
+  background-image: url("./assets/bg1.jpg");
+}
 
-.footer {
-  position: relative;
-  display: block;
-  background-color: black;
-  height: 100vh;
-  color: white;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-
-  h3 {
-    font-weight: normal;
-    color: var(--color-blue);
-  }
-}</style>
+</style>

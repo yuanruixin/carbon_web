@@ -33,6 +33,7 @@ const props = defineProps({
 
 <style lang="scss" scoped>
 .wrapper{
+  width: 100%;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -40,8 +41,8 @@ const props = defineProps({
   row-gap: 20px;
 }
 .circle{
-  width: 330px;
-  height: 330px;
+  width: 70%;
+  aspect-ratio: 1 / 1;
   border: 1px dashed #0E5CFE;
   border-radius: 50%;
   display: flex;
@@ -49,13 +50,13 @@ const props = defineProps({
   align-items: center;
 }
 .bg-wrapper {
-  width: 276px;
-  height: 276px;
+  width: 80%;
+  aspect-ratio: 1 / 1;
   border: 1px dashed #0E5CFE;
   border-radius: 50%;
   .bg {
-    width: 224px;
-    height: 224px;
+    width:80%;
+    aspect-ratio: 1 / 1;
     border: 26px solid #cfdeff;
     border-radius: 50%;
     margin: 0 auto;
@@ -64,7 +65,7 @@ const props = defineProps({
 
     .content {
       width: 100%;
-      height: 100%;
+      aspect-ratio: 1 / 1;
       display: grid;
       grid-template-columns: 1fr;
       grid-template-rows:  1fr 2fr;
@@ -73,7 +74,7 @@ const props = defineProps({
       row-gap: 20px;
       svg{
         align-self: end;
-        width: 60px;
+        width: 80%;
         height: 60px;
       }
     }

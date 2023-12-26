@@ -20,16 +20,20 @@ const updateStore = citiesStore.updateStore
 updateStore()
 // 仓库数据
 const { citiesIndex } = storeToRefs(citiesStore)
-const {cityName} = storeToRefs(cityDetailStore)
+const { cityName } = storeToRefs(cityDetailStore)
 
+let chart = null
 // 更新表中数据
-watch(() => [citiesIndex.value,cityName.value], (newValue) => {
+watch(() => [citiesIndex.value, cityName.value], (newValue) => {
   initChart(newValue[0], newValue[1])
 })
 
 // 传入数据，并使当前城市高亮
 function initChart(data, currentCity) {
-  const chart = new Chart({
+  if(chart){
+    chart.data(data)
+  }
+  chart = new Chart({
     container: 'bg-chart',
     autoFit: true,
   });
@@ -38,8 +42,11 @@ function initChart(data, currentCity) {
       title: false
     })
     .axis("x", {
-      title: false
+      title: false,
+      // labelSpacing: 4,
+      labelTransform: 'rotate(-50)'
     })
+    
   chart
     .interval()
     .data(data)
@@ -65,7 +72,7 @@ function getColor(v) {
 
 onMounted(() => {
 
-      initChart(citiesIndex.value, "北京")
+  initChart(citiesIndex.value, "北京")
 })
 </script>
 

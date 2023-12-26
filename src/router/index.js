@@ -11,15 +11,12 @@ const routes = [
   },
   {
     name:"cityDetail",
-    path: '/cityDetail/:city?',
+    path: '/cityDetail',
     component: () => import("@/pages/city/CityDetail.vue"),
-    props: route => ({
-      city: route.query.city || '北京'
-    })
   },
   {
     path: '/',
-    redirect: '/map'
+    redirect: '/home'
   }
 ]
 

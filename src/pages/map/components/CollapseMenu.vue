@@ -7,24 +7,16 @@
             <span>双碳地图</span>
           </div>
         </template>
-        <el-input v-model="position" placeholder="搜索地域">
-          <template #prepend>
-            <el-button :icon="Search" />
-          </template>
-          <template #append>
-            <el-button type="primary"> 搜索</el-button>
-          </template>
-        </el-input>
         <div class="select-container">
           <div class="cities-select">
             <p>年份</p>
-            <el-select v-model="year" placeholder="Select" style="width: 240px">
+            <el-select v-model="year" placeholder="Select" style="width: 80%">
               <el-option v-for="item in yearOptions" :key="item.value" :label="item.label" :value="item.value" />
             </el-select>
           </div>
           <div class="air-select">
             <p>图层类型</p>
-            <el-select v-model="layerType" placeholder="Select" style="width: 240px">
+            <el-select v-model="layerType" placeholder="Select" style="width: 80%">
               <el-option v-for="item in layerTypeOption" :key="item.value" :label="item.label" :value="item.value" />
             </el-select>
           </div>
@@ -56,7 +48,6 @@ import { ArrowRightBold, ArrowLeftBold, Search } from '@element-plus/icons-vue';
 const emit = defineEmits(["update-map"])
 
 const showMenu = ref(true)
-const position = ref('')
 
 const year = ref('2020')
 const layerType = ref('NPP')
@@ -90,11 +81,8 @@ function sumbmitOption() {
 
 <style scoped lang="scss">
 .side-pannel {
-  --silde-width: 350px;
-
-  width: var(--silde-width);
-  will-change: translateX;
-  transform: translateX(calc(0px - var(--silde-width)));
+  width: clamp(200px,30vw,350px);
+  transform: translateX(-100%);
   transition: all 0.3s ease-in;
 
   .side-content {
@@ -132,6 +120,12 @@ function sumbmitOption() {
   .caption{
     font-size: 13px;
     color: gray;
+  }
+}
+
+@media screen and (max-width:800px) {
+  .data-source{
+    display: none;
   }
 }
 </style>

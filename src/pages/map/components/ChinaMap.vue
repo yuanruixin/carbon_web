@@ -1,15 +1,16 @@
 <template>
   <div class="container">
     <CollapseMenu class="collapse-menu" @update-map="updateLayers"></CollapseMenu>
-    <div id="map" ></div>
+    <div id="map"></div>
   </div>
 </template>
 
 <script setup>
-import { onMounted, } from "vue";
-import { Scene, PointLayer, Control, Popup, RasterLayer, PolygonLayer } from '@antv/l7'
+import { onMounted } from "vue";
+import { Scene, PointLayer, Control, Popup, RasterLayer, PolygonLayer, DOM } from '@antv/l7'
 import { GaodeMapV1 } from '@antv/l7-maps';
-import request from '@/utils/request.js'
+// import request from '@/utils/request.js'
+import { getNppFile } from '@/api/index.js'
 import * as GeoTIFF from 'geotiff';
 import CollapseMenu from './CollapseMenu.vue';
 import citiesPosition from "../assets/citiesPosition.json"
@@ -17,7 +18,40 @@ import citiesPosition from "../assets/citiesPosition.json"
 // 创建地图
 let scene = null
 // 
+const styleElement = document.createElement('style');
 
+// 在<style>元素中添加样式规则
+styleElement.textContent = `
+            .info {
+                padding: 6px 8px;
+                font: 14px/16px Arial, Helvetica, sans-serif;
+                background: white;
+                background: rgba(255,255,255,0.8);
+                box-shadow: 0 0 15px rgba(0,0,0,0.2);
+                border-radius: 5px;
+            }
+            .info h4 {
+                margin: 0 0 5px;
+                color: #777;
+            }
+            .legend {
+                line-height: 18px;
+                color: #555;
+            }
+            .legend i {
+                width: 40px;
+                height: 20px;
+                float: left;
+                margin-top: 5px;
+                margin-right: 0px;
+                opacity: 1;
+                color: #000;
+                font-weight: bold;
+            }
+            `;
+
+// 将<style>元素添加到<head>元素中，实现样式注入
+document.head.appendChild(styleElement);
 function initMap() {
   scene = new Scene({
     id: 'map',
@@ -25,22 +59,64 @@ function initMap() {
       center: [99.288144, 38.239692],
       pitch: 0,
       zoom: 3.5,
-      minZoom: 4.5,
       token: '1cb9598ad3fd4bd4ae11ac5e960dcc77',
     })
   })
+  // 添加图例
+  const legend = new Control(
+    { position: 'bottomright' }
+  )
+
+  legend.onAdd = () => {
+    let div = DOM.create('div', 'info legend')
+    let grades = [0, '400', '700', '1000', '>2000', 'g/ (m2·a)']
+    let grades2 = [0, 45, 55, 60, 65,'']
+    let colors = ['rgb(194, 82, 60)', 'rgb(242, 191, 12)', 'rgb(77, 217, 67)', 'rgb(23, 181, 104)', 'rgb(11, 44, 123)'];
+    let colors2 = ["#681f86", "#be0612", "#ec7d3c", "#2f8af0", "#1aaf54"];
+
+    for (let i = 0; i < grades.length; i++) {
+      if (i < grades.length - 1) {
+        div.innerHTML += '<i style="background:' + colors[i] + '"></i>';
+      }
+      else {
+        div.innerHTML += '<i style=" width: 60px; margin-left: 10px;">NPP数据</i><br>';
+      }
+    }
+    for (let i = 0; i < grades.length; i++) {
+      if (i < grades.length - 1) {
+        div.innerHTML += `<i>${grades[i]}</>`
+      } else {
+        div.innerHTML += `<i style=" width: 60px;">${grades[i]}</i><br>`
+      }
+    }
+
+    for (let i = 0; i < grades2.length; i++) {
+      if (i < grades2.length - 1) {
+        div.innerHTML += '<i style="background:' + colors2[i] + '"></i>';
+      }
+      else {
+        div.innerHTML += '<i style=" width: 60px; margin-left: 10px;">双碳指数</i><br>';
+      }
+    }
+    for (let i = 0; i < grades2.length; i++) {
+      if (i < grades2.length - 1) {
+        div.innerHTML += `<i>${grades2[i]}</>`
+      } else {
+        div.innerHTML += `<i style=" width: 60px;">${grades2[i]}</i><br>`
+      }
+    }
+
+    return div;
+  }
+
+  scene.addControl(legend)
 }
-// 根据情况，选择加载哪一种图层
-// 存在问题：重复加载图层会重复渲染
-// （预期：已经渲染了，再次执行不渲染。
-// 需要更新，
 
 // 更新地图函数
-
 function updateLayers(option) {
   let defaultOption = {
-    type:'npp',
-    year:2022
+    type: 'npp',
+    year: 2022
   }
   option = Object.assign(defaultOption, option)
   loadMaskLayer(option.year)
@@ -55,8 +131,7 @@ function loadCitiesLayer() {
   scene.on('loaded', async () => {
     // 添加点图层
     await initMarkers()
-    // 图例
-    addLegend()
+   
     // 为点图层添加LayerPopup
     addLayerPopup(scene.getLayerByName("pointLayer_city"))
 
@@ -67,7 +142,7 @@ function loadCitiesLayer() {
       .then(data => {
         const pointLayer = new PointLayer({
           name: "pointLayer_city",
-          zIndex:1
+          zIndex: 1
         })
           .source(data, {})
           .shape('circle')
@@ -89,8 +164,6 @@ function loadCitiesLayer() {
 
       })
   };
-  // 点图层的图例
-
   // 为点图层添加LayerPopup
   function addLayerPopup(pointLayer) {
     const popup = new Popup()
@@ -108,26 +181,6 @@ function loadCitiesLayer() {
       })
     })
     scene.addPopup(popup);
-  }
-  // 添加图例
-  function addLegend() {
-    const legend = new Control({
-      position: "bottomright"
-    })
-    legend.onAdd = function () {
-      var el = document.createElement("div");
-      el.className = "infolegend legend";
-      var grades = [68, 65, 60, 55, 45, 0];
-      let colors = ["#1aaf54", "#2f8af0", "#f9d067", "#ec7d3c", "#be0612", "#681f86"]
-      for (var i = 0; i < grades.length; i++) {
-        el.innerHTML +=
-          '<span style="display:inline-block;width:20px;height:20px;border-radius:50%;background:' + colors[i] + '"> </span> '
-          + `<span style="vertical-align:middle"> ${grades[i]} </span><br>`
-
-      }
-      return el;
-    };
-    scene.addControl(legend)
   }
 
   function getColor(v) {
@@ -154,10 +207,7 @@ function loadCitiesLayer() {
 */
 function loadMaskLayer(year = 2020) {
   async function getTiffData() {
-      const response = await request.get(
-      `http://127.0.0.1:3007/download/npp/${year}.tif`,
-      { responseType: 'blob'}
-    );
+    const response = await getNppFile(year)
     const arrayBuffer = await response.arrayBuffer();
     const tiff = await GeoTIFF.fromArrayBuffer(arrayBuffer);
     const image = await tiff.getImage();
@@ -174,7 +224,7 @@ function loadMaskLayer(year = 2020) {
   }
 
   const nppRasterLayer = scene.getLayerByName('nppRaster')
-  if(nppRasterLayer){
+  if (nppRasterLayer) {
     scene.removeLayer(nppRasterLayer);
   }
   fetch(
@@ -182,16 +232,16 @@ function loadMaskLayer(year = 2020) {
   )
     .then((res) => res.json())
     .then(async (maskData) => {
-      
+
       const tiffdata = await getTiffData();
       const polygonLayer = new PolygonLayer({
-        zIndex:0,
+        zIndex: 0,
         visible: false
       }).source(maskData).shape('fill').color('#f00').style({ opacity: 0.5 });
       const layer = new RasterLayer({
-        name:'nppRaster',
+        name: 'nppRaster',
         maskLayers: [polygonLayer],
-        zIndex:0
+        zIndex: 0
       });
       // 像元的最值
       const mindata = -0;
@@ -203,7 +253,7 @@ function loadMaskLayer(year = 2020) {
             width: tiffdata.width,
             height: tiffdata.height,
             extent: [
-            73.500156546659,
+              73.500156546659,
               3.7840161485822,
               135.14538113670,
               53.566540392046,
@@ -212,7 +262,7 @@ function loadMaskLayer(year = 2020) {
         })
         .style({
           opacity: 0.8,
-      
+
           domain: [mindata, maxdata],
           clampLow: true,
           rampColors: {
@@ -226,10 +276,10 @@ function loadMaskLayer(year = 2020) {
               'rgb(11, 44, 123)',
             ],
             // 各种颜色的区间
-            positions: [0,0.0002,0.1215, 0.2392, 0.3725, 0.5686,1],
+            positions: [0, 0.0002, 0.1215, 0.2392, 0.3725, 0.5686, 1],
           },
         });
-       
+
       scene.addLayer(layer);
       scene.addLayer(polygonLayer);
     });
@@ -259,7 +309,13 @@ onMounted(() => {
 
   #map {
     height: 100%;
+    position: relative;
   }
+}
 
+@media screen and (max-width:800px) {
+  :deep() .l7-control-container{
+    display: none;
+  }
 }
 </style>

@@ -6,59 +6,66 @@
 </template>
 
 <script setup>
-import {watch,} from 'vue'
-import {storeToRefs} from 'pinia'
-import {Chart} from "@antv/g2"
+import { watch, ref, unref, onMounted } from 'vue'
+import { storeToRefs } from 'pinia'
+import { Chart } from "@antv/g2"
 import useCityDetailStore from "@/store/cityDetail.js"
 const cityDetailStore = useCityDetailStore()
-const {co2GdpData} = storeToRefs(cityDetailStore)
+const { co2GdpData } = storeToRefs(cityDetailStore)
 
- watch(()=>co2GdpData.value,(newValue,oldvalue)=>{
-   const {xgdpdata,ygdpdata,yperdata_avg} = co2GdpData.value
-   const chartData =  xgdpdata.map((item,index)=>({year:xgdpdata[index],"value":ygdpdata[index]}))
-   initChart(chartData)
-}) 
 
-function initChart(data){
-  const chart = new Chart({
+let chart = null
+watch(() => co2GdpData.value, (newValue) => {
+  const { xgdpdata, ygdpdata, ygdpdata_avg } = newValue
+  const chartData = xgdpdata.map((item, index) => ({ year: xgdpdata[index], "单位GDP排放": ygdpdata[index], "平均值": ygdpdata_avg[index] }))
+  renderChart(chartData)
+})
+
+
+function renderChart(data) {
+  if (chart !== null) {
+    return chart.data(data)
+  }
+
+  chart = new Chart({
     container: 'gdp-carbon',
     autoFit: true,
   });
+  chart.data(data)
   chart
-    .axis("y", { title: "碳排放总量"})
-    .axis("x", {  title: false })
-    .title({
-      size:60,
-      align:'center',
-      title:"单位GDP碳排放",
-      subtitle:"（单位：吨二氧化碳当量/万元）"
+  .title({
+      size: 60,
+      align: 'center',
+      title: "单位GDP碳排放",
+      subtitle: "（单位：吨二氧化碳当量/万元）"
     })
     
-  // y轴单位标注
   chart
-  .text()
-  .style('fill', 'black')
-  .style('textAlign', 'start')
-  .style('dy', -5);
-
-  chart
-    .interval()
-    .data(data)
+    .line()
+    .axis("x", { title: false })
     .encode('x', 'year')
-    .encode('y', 'value')
-    .encode('color', 'value')
-    .scale('color', {
-      range:["#78c8f5","#ceed83"]
-    })
+    .encode('y', '平均值')
+    .scale('y', { domainMax: 4, domainMin: 0 })
+
+    chart
+    .interval()
+    .encode('x', 'year')
+    .encode('y', '单位GDP排放')
+    .encode('color', '单位GDP排放')
+    .axis("y", { title: "碳排放总量" })
+    .axis("x", { title: false })
+    .legend(false),
+
+    
+    
+  
+
   chart.render();
   return chart
 }
 
-
 </script>
 
 <style lang="scss" scoped>
-  #gdp-carbon{
-    height: 100%;
-  }
+
 </style>

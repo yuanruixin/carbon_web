@@ -25,7 +25,6 @@ const props = defineProps({
 <style lang="scss" scoped>
 .section-wrapper {
   position: relative;
-
   .title-continer {
     position: absolute;
     top: 0;
@@ -47,7 +46,7 @@ const props = defineProps({
     }
 
     .title {
-      font-size: 66px;
+      font-size: clamp(12px,10vw,66px);
       color: #fff;
       font-weight: bold;
     }

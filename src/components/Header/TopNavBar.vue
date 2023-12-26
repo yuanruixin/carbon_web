@@ -21,7 +21,7 @@ const tapItems = [
     id:'0',path: "/map", text: "双碳地图"
   },
   {
-    id:'1',path: "/cityDetail", text: "城市",
+    id:'1',path: "/cityDetail?city=北京", text: "城市",
   }
 ]
 const activeIndex = ref('32')

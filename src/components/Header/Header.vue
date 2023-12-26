@@ -14,7 +14,7 @@ import TopNavBar from './TopNavBar.vue'
 <style lang="scss" scoped>
 header {
   height: 60px;
-  padding: 0 80px;
+  padding: 0 clamp(10px,5vw,60px);
   display: flex;
   background-color: #fff;
   justify-content: space-between;

@@ -22,11 +22,18 @@ export default defineConfig({
   },
   server: {
     // 代理配置
+    open:true,
     proxy: {
       '/api': { 
-        target: '127.0.0.1:3007', // 目标地址 --> 服务器地址
+        target: 'http://127.0.0.1:3007', // 目标地址 --> 服务器地址
         changeOrigin: true, // 允许跨域
-      }
+      },
+      '/download': { 
+        target: 'http://127.0.0.1:3007', // 目标地址 --> 服务器地址
+        changeOrigin: true, // 允许跨域
+      },
     }
   }
 })
+
+

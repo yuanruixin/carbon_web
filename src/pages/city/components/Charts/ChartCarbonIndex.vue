@@ -6,29 +6,33 @@
 </template>
 
 <script setup>
-import { onMounted, watch,ref } from 'vue'
-import {storeToRefs} from 'pinia'
+import { onMounted, watch, computed } from 'vue'
+import { storeToRefs } from 'pinia'
 import { Chart } from '@antv/g2';
 import useCityDetailStore from "@/store/cityDetail.js"
-import { getCarbonIndex } from "@/api/index.js"
+
 
 const cityDetail = useCityDetailStore()
-const {cityIndexData,cityName} = storeToRefs(cityDetail)
+const { cityIndexData } = storeToRefs(cityDetail)
 
-let chart = ref(null)
+let chart = null
 
-async function getCityData() {
+const chartData = computed(() => {
   const { nameArr, qzArr, seriesData } = cityIndexData.value
   return nameArr.map((item, index) => ({ "item": `${nameArr[index]}\n(${qzArr[index]})`, "得分": seriesData[index] }))
-}
+})
 
-watch(() => cityIndexData.value
-  , (v) => {
-    getCityData(cityName.value).then(data => {
-      chart.changeData(data)
-    })
-  })
+watch(() => chartData.value, (newData) => {
+  initChart(chartData.value)
+})
+
 function initChart(data) {
+  if (chart !== null) {
+    chart = null
+    // chart.data(data)
+    // chart.render()
+  }
+
   chart = new Chart({
     container: 'city-index',
     autoFit: true,
@@ -37,18 +41,20 @@ function initChart(data) {
 
   chart
     .data(data)
-    .scale('x', { padding: 0.5, align: 0 })
+    .scale('x', { padding: 0.6, align: 1 })
     .scale('y', { tickCount: 5 })
     .axis('x', {
       zIndex: 1,
-      labelSpacing: 4,
-      labelTransform: 'rotate(0)'
+      labelStrokeWidth: 5,
+      titleFontSize: 8,
+      title: false,
+      labelTransform: 'rotate(0)',
     })
     .axis('y', {
       zIndex: -1,
       title: false,
       gridAreaFill: '#eee',
-    });
+    })
 
 
   chart
@@ -66,24 +72,10 @@ function initChart(data) {
     .encode('y', '得分')
     .style('stroke', 'steelblue')
     .encode('shape', 'smooth')
-    .style('lineWidth', 2);
-
-
-
-  chart.interaction('tooltip', {
-    crosshairsLineDash: [4, 4],
-
-  });
-
+    .style('lineWidth', 2); 
   chart.render();
 }
 
-onMounted(() => {
-  getCityData(cityName.value).then(data => {
-    initChart(data)
-  })
-
-})
 </script>
 
 <style scoped>

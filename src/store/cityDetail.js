@@ -1,6 +1,6 @@
 import { defineStore } from 'pinia';
 import { ref } from 'vue'
-import { getCarbonIndex, getCityState,getCityAmbition } from '@/api'
+import { getCarbonIndex, getCityState,getCityAmbition,getEmissionTrend } from '@/api'
 const useCityDetailStore = defineStore('cityDetail', () => {
   // 当前查询城市
   const cityName = ref("北京")
@@ -32,6 +32,13 @@ const useCityDetailStore = defineStore('cityDetail', () => {
     ygdpdata: [],
     ygdpdata_avg: []
   })
+  // 碳排放趋势
+  const emissionTrend=ref({
+    tuogouName:'强脱钩',
+    xcarbondata:[],
+    ycarbondata:[],
+    ygdpdata:[]
+  })
   // 非化石能源比重（总量为1）
   const clearEnergy = ref(0.2)
   /**
@@ -40,6 +47,7 @@ const useCityDetailStore = defineStore('cityDetail', () => {
    * @returns {void}
   */
   async function updateCity(city = "北京") {
+    if(!city) city = "北京"
     cityName.value = city
     const indexRes = await getCarbonIndex(city)
     cityIndexData.value = indexRes.data
@@ -53,6 +61,9 @@ const useCityDetailStore = defineStore('cityDetail', () => {
     // 城市气候雄心数据（碳达峰及碳中和目标年）
     const ambitionRes =  await getCityAmbition(city)
     carbonTargrt.value = ambitionRes.data
+    // 碳排放趋势
+    const trendData = await getEmissionTrend(city)
+    emissionTrend.value = trendData.data
   }
   
   return {
@@ -63,6 +74,7 @@ const useCityDetailStore = defineStore('cityDetail', () => {
     co2PerData,
     co2GdpData,
     clearEnergy,
+    emissionTrend,
     // 函数
     updateCity
   }

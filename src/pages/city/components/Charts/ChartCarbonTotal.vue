@@ -13,8 +13,8 @@ import useCityDetailStore from "@/store/cityDetail.js"
 const cityDetailStore = useCityDetailStore()
 const {co2Data} = storeToRefs(cityDetailStore)
 
- watch(()=>co2Data.value,(newValue,oldvalue)=>{
-   const {xco2data,yco2data} = co2Data.value
+ watch(()=>co2Data.value,(newValue)=>{
+   const {xco2data,yco2data} = newValue
    const chartData =  xco2data.map((item,index)=>({year:xco2data[index],"value":yco2data[index]}))
    initChart(chartData)
 }) 
@@ -51,7 +51,5 @@ function initChart(data){
 </script>
 
 <style lang="scss" scoped>
-  #total-carbon{
-    height: 100%;
-  }
+  
 </style>
