@@ -10,8 +10,7 @@ import { onMounted, watch, computed } from 'vue'
 import { storeToRefs } from 'pinia'
 import { Chart } from '@antv/g2';
 import useCityDetailStore from "@/store/cityDetail.js"
-
-
+import { isMobile } from '@/utils/isMobile.js'
 const cityDetail = useCityDetailStore()
 const { cityIndexData } = storeToRefs(cityDetail)
 
@@ -19,19 +18,18 @@ let chart = null
 
 const chartData = computed(() => {
   const { nameArr, qzArr, seriesData } = cityIndexData.value
-  return nameArr.map((item, index) => ({ "item": `${nameArr[index]}\n(${qzArr[index]})`, "得分": seriesData[index] }))
+  return nameArr.map((item, index) => ({ "item": `${nameArr[index]}(${qzArr[index]})`, "得分": seriesData[index] }))
 })
 
 watch(() => chartData.value, (newData) => {
-  initChart(chartData.value)
+  initChart(newData)
 })
 
 function initChart(data) {
   if (chart !== null) {
-    chart = null
-    // chart.data(data)
-    // chart.render()
+    chart.data(data)
   }
+
 
   chart = new Chart({
     container: 'city-index',
@@ -41,7 +39,7 @@ function initChart(data) {
 
   chart
     .data(data)
-    .scale('x', { padding: 0.6, align: 1 })
+    .scale('x', { padding: 0.5, align: 1 })
     .scale('y', { tickCount: 5 })
     .axis('x', {
       zIndex: 1,
@@ -49,6 +47,17 @@ function initChart(data) {
       titleFontSize: 8,
       title: false,
       labelTransform: 'rotate(0)',
+      labelFontSize: 10,
+      labelFormatter: ((datum) => {
+        const index = datum.indexOf('(')
+        if (isMobile()) {
+          datum = datum.slice(0, index)
+          const MAX_LENGTH = 6; // 最大显示长度
+          return datum.length > MAX_LENGTH ? datum.slice(0, MAX_LENGTH) + '...' : datum;
+        }
+
+        return datum.slice(0, index) + '\n' + datum.slice(index)
+      })
     })
     .axis('y', {
       zIndex: -1,
@@ -72,9 +81,11 @@ function initChart(data) {
     .encode('y', '得分')
     .style('stroke', 'steelblue')
     .encode('shape', 'smooth')
-    .style('lineWidth', 2); 
+    .style('lineWidth', 2);
   chart.render();
 }
+
+
 
 </script>
 

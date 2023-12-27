@@ -1,7 +1,7 @@
 <template>
   <section class="section-wrapper">
     <div class="title-continer">
-      <TheIcon :icon="icon" class="icon" :width="68" :height="68"></TheIcon>
+      <TheIcon :icon="icon" class="icon" :width="50" :height="50"></TheIcon>
       <span class="title">{{ props.title }}</span>
     </div>
     <div class="main-content">
@@ -30,7 +30,6 @@ const props = defineProps({
     top: 0;
     left: 50%;
     transform:translate(-50%,0);
-    translate: -50% 0;
     width: max-content;
     padding: 20px;
     border-radius: 0 0 20px 20px;
@@ -43,6 +42,8 @@ const props = defineProps({
 
     .icon {
       width: 68px;
+      // width: 20px;
+      // height: 20px;
       height: 68px;
     }
 

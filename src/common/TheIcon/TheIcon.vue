@@ -1,5 +1,5 @@
 <template>
-  <svg>
+  <svg class="svg-wrapper">
     <use :href="`${sprite}#icon-${icon}`"  :height='height' :width="width"> </use>
   </svg>
 </template>
@@ -26,6 +26,11 @@ defineProps({
 </script>
  
 <style scoped>
+.svg-wrapper{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
  .icon{
   width: 100%;
   height: 100%;

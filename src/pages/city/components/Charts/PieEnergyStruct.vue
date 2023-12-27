@@ -65,5 +65,9 @@ onMounted(()=>{
 </script>
 
 <style lang="scss" scoped>
-
+@media screen and (min-width:900px) {
+  #energy-pie{
+    width: 60%;
+  }
+}
 </style>

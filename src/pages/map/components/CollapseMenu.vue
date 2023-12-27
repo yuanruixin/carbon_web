@@ -65,10 +65,6 @@ const layerTypeOption = [
 ]
 // 根据所选择的数据，向父组件传值，加载地图
 function sumbmitOption() {
-  console.log({
-    type: layerType.value,
-    year: year.value
-  });
   emit('update-map', {
     type: layerType.value,
     year: year.value
@@ -81,15 +77,15 @@ function sumbmitOption() {
 
 <style scoped lang="scss">
 .side-pannel {
-  width: clamp(200px,30vw,350px);
+  width: clamp(200px, 30vw, 350px);
   transform: translateX(-100%);
   transition: all 0.3s ease-in;
 
   .side-content {
-    height: 100%;
-    overflow: auto;
-    height: max-height(800px);
-    overflow-y: auto;
+    // height: 100%;
+    // overflow: auto;
+    // height: max-height(800px);
+    // overflow-y: auto;
   }
 }
 
@@ -117,15 +113,20 @@ function sumbmitOption() {
 
 .data-source {
   line-height: 1.25;
-  .caption{
+
+  .caption {
     font-size: 13px;
     color: gray;
   }
 }
 
 @media screen and (max-width:800px) {
-  .data-source{
+  .data-source {
     display: none;
   }
-}
+
+  .arrow-btn {
+    top: 60%;
+  }
+  }
 </style>

@@ -34,6 +34,7 @@ const props = defineProps({
 <style lang="scss" scoped>
 .wrapper{
   width: 100%;
+  aspect-ratio: 1 / 1;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -55,16 +56,19 @@ const props = defineProps({
   border: 1px dashed #0E5CFE;
   border-radius: 50%;
   .bg {
-    width:80%;
+    width:100%;
     aspect-ratio: 1 / 1;
-    border: 26px solid #cfdeff;
+    border: 10px solid #cfdeff ;
+    box-sizing: border-box;
+    // background-color: #cfdeff;
     border-radius: 50%;
     margin: 0 auto;
     text-align: center;
-    font-size: 50px;
+    // font-size: 50px;
+    font-size: clamp(30px,5vw,50px);
 
     .content {
-      width: 100%;
+      width: 100%; 
       aspect-ratio: 1 / 1;
       display: grid;
       grid-template-columns: 1fr;

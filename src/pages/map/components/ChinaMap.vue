@@ -8,7 +8,7 @@
 <script setup>
 import { onMounted } from "vue";
 import { Scene, PointLayer, Control, Popup, RasterLayer, PolygonLayer, DOM } from '@antv/l7'
-import { GaodeMapV1 } from '@antv/l7-maps';
+import { GaodeMap} from '@antv/l7-maps';
 // import request from '@/utils/request.js'
 import { getNppFile } from '@/api/index.js'
 import * as GeoTIFF from 'geotiff';
@@ -55,7 +55,7 @@ document.head.appendChild(styleElement);
 function initMap() {
   scene = new Scene({
     id: 'map',
-    map: new GaodeMapV1({
+    map: new GaodeMap({
       center: [99.288144, 38.239692],
       pitch: 0,
       zoom: 3.5,
@@ -168,7 +168,7 @@ function loadCitiesLayer() {
   function addLayerPopup(pointLayer) {
     const popup = new Popup()
     scene.addPopup(popup);
-    pointLayer.on('mouseenter', e => {
+    pointLayer.on('click', e => {
       const { lng, lat } = e.lngLat
       const { name, value } = e.feature.properties
       popup.setOptions({
@@ -303,8 +303,7 @@ onMounted(() => {
 
   .collapse-menu {
     position: absolute;
-    height: 100%;
-    z-index: 20;
+    z-index: 10;
   }
 
   #map {

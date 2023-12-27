@@ -73,7 +73,7 @@ section {
   }
 }
 .bg1{
-  background-image: url("./assets/bg2.png");
+  background-image: url("./assets/bg2.jpg");
 }
 .bg2{
   background-image: url("./assets/bg1.jpg");

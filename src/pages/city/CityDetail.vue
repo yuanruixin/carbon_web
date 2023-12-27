@@ -1,49 +1,51 @@
 <template>
-  <el-scrollbar>
-    <div class="container">
-      <section class="city-environment">
-        <div class="header">
-          <div class="city-name">
-            <h2 ref="title">{{ cityName ?? "北京" }}</h2>
-            <p>城市双碳指数</p>
+  <keep-alive>
+    <el-scrollbar>
+      <div class="container">
+        <section class="city-environment">
+          <div class="header">
+            <div class="city-name">
+              <h2 ref="title">{{ cityName ?? "北京" }}</h2>
+              <p>城市双碳指数</p>
+            </div>
+            <div class="search-container">
+              <span for="">查询其他城市:</span>
+              <el-input v-model="inputValue" placeholder="输入其他城市的名称" style="height:40px" @keyup.enter="pushWithQuery">
+                <template #append>
+                  <el-button @click="pushWithQuery"> 搜索</el-button>
+                </template>
+              </el-input>
+            </div>
           </div>
-          <div class="search-container">
-            <span for="">查询其他城市:</span>
-            <el-input v-model="inputValue" placeholder="输入其他城市的名称" style="height:40px" @keyup.enter="pushWithQuery">
-              <template #append>
-                <el-button @click="pushWithQuery"> 搜索</el-button>
-              </template>
-            </el-input>
+          <div class="section-content">
+            <ChartCities class="city-map chart"></ChartCities>
+            <ChartCarbonIndex class="city-chart chart"></ChartCarbonIndex>
           </div>
-        </div>
-        <div class="section-content">
-          <ChartCities class="city-map"></ChartCities>
-          <ChartCarbonIndex class="city-chart"></ChartCarbonIndex>
-        </div>
-      </section>
-      <SectionContainer title="气候雄心" icon="target">
-        <div class="section-content">
-          <TargetCircle :date="carbonTargrt.peak" text="碳达峰目标年" />
-          <TargetCircle :date="carbonTargrt.neutral" text="碳中和目标年" />
-        </div>
-      </SectionContainer>
-      <SectionContainer title="低碳状态" icon="status">
-        <div class="section-content  carbon-state">
-          <!-- 总碳排放量直方图 -->
-          <ChartCarbonTotal class="chart"/>
-          <!-- 能源结构扇形图 -->
-          <PieEnergyStruct class="chart"/>
-          <!-- 人均碳排放直方图 -->
-          <ChartCarbonPer class="chart" />
-          <!-- 单位GDP碳排放直方图 -->
-          <ChartCarbonPerGdp class="chart"/>
-          <!-- 碳排放趋势折线图 -->
-          <ChartEmissionTrend class="chart"/>
-        </div>
-      </SectionContainer>
-    </div>
+        </section>
+        <SectionContainer title="气候雄心" icon="target">
+          <div class="section-content">
+            <TargetCircle :date="carbonTargrt.peak" text="碳达峰目标年" />
+            <TargetCircle :date="carbonTargrt.neutral" text="碳中和目标年" />
+          </div>
+        </SectionContainer>
+        <SectionContainer title="低碳状态" icon="status">
+          <div class="section-content  carbon-state">
+            <!-- 总碳排放量直方图 -->
+            <ChartCarbonTotal class="chart" />
+            <!-- 能源结构扇形图 -->
+            <PieEnergyStruct class="chart" />
+            <!-- 人均碳排放直方图 -->
+            <ChartCarbonPer class="chart" />
+            <!-- 单位GDP碳排放直方图 -->
+            <ChartCarbonPerGdp class="chart" />
+            <!-- 碳排放趋势折线图 -->
+            <ChartEmissionTrend class="chart" />
+          </div>
+        </SectionContainer>
+      </div>
 
-  </el-scrollbar>
+    </el-scrollbar>
+  </keep-alive>
 </template>
 
 <script setup>
@@ -82,12 +84,12 @@ const cityiesStore = useCitiesStore()
  * @returns {void}
  */
 const updateCity = cityDetailStore.updateCity
-const { carbonTargrt,cityName } = storeToRefs(cityDetailStore)
+const { carbonTargrt, cityName } = storeToRefs(cityDetailStore)
 const { cities } = storeToRefs(cityiesStore)
 
 watch(() => route.query.city, (newValue) => {
   updateCity(newValue)
-},{immediate:true})
+}, { immediate: true })
 
 function pushWithQuery() {
   if (!cities.value.includes(inputValue.value)) {
@@ -104,6 +106,8 @@ function pushWithQuery() {
   }
 }
 
+
+
 </script>
 
 <style scoped lang="scss">
@@ -117,8 +121,8 @@ function pushWithQuery() {
   row-gap: 40px;
 
   section {
-    margin: 0 clamp(10px,5vw,200px);
-    padding: clamp(10px,10vh,32px) clamp(10px,5vw,50px);
+    margin: 0 clamp(10px, 20vw, 200px);
+    padding: clamp(10px, 10vh, 32px) clamp(10px, 5vw, 50px);
     box-shadow: rgba(14, 92, 254, 0.2) 0 1px 16px 4px;
     border-radius: 20px;
     background-color: #fff;
@@ -130,14 +134,15 @@ function pushWithQuery() {
 
   .header {
     display: grid;
-    grid-template-columns: repeat(auto-fit,minmax(200px,1fr));
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
     align-items: center;
     justify-content: space-between;
     justify-items: start;
     column-gap: 40px;
+
     .city-name {
       max-width: 300px;
-      font-size: clamp(12px,4vw,20px);
+      font-size: clamp(12px, 4vw, 20px);
       display: flex;
       flex-direction: column;
       align-items: center;
@@ -155,7 +160,7 @@ function pushWithQuery() {
       justify-self: end;
       max-width: 300px;
       display: grid;
-      grid-template-columns: repeat(2,minman(200px,1fr));
+      grid-template-columns: repeat(2, minman(200px, 1fr));
       align-items: center;
       column-gap: 24px;
     }
@@ -165,14 +170,27 @@ function pushWithQuery() {
 
 .section-content {
   display: grid;
-  grid-template-columns: repeat(auto-fit,minmax(max(30vw,200px),1fr));
+  grid-template-columns: repeat(auto-fit, minmax(max(30vw, 200px), 1fr));
   gap: 40px;
-  .chart{
+
+  .chart {
     justify-self: center;
-    width: 80%;
+    width: 90%;
     aspect-ratio: 1 / 1;
   }
 
 }
 
+@media screen and (max-width: 900px) {
+  .container section {
+    margin: 0;
+    padding: clamp(10px, 10vh, 32px) clamp(40px, 5vw, 50px);
+  }
+
+  .section-content .chart {
+    width: 100%;
+    border-radius: 20px;
+    box-shadow: 0 0px 2px rgba(0, 0, 0, 0.4);
+  }
+}
 </style>

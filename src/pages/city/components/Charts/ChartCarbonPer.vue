@@ -51,7 +51,7 @@ function initChart(data){
   chart.render();
   return chart
 }
-
+ 
 
 </script>
 
