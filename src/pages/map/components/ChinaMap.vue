@@ -1,20 +1,21 @@
 <template>
-  <div class="container">
-    <CollapseMenu class="collapse-menu" @update-map="updateLayers"></CollapseMenu>
-    <div id="map"></div>
-  </div>
+  <div id="map"></div>
 </template>
 
 <script setup>
-import { onMounted } from "vue";
+import { onMounted ,watch} from "vue";
 import { Scene, PointLayer, Control, Popup, RasterLayer, PolygonLayer, DOM } from '@antv/l7'
-import { GaodeMap} from '@antv/l7-maps';
-// import request from '@/utils/request.js'
+import { GaodeMap } from '@antv/l7-maps';
 import { getNppFile } from '@/api/index.js'
 import * as GeoTIFF from 'geotiff';
-import CollapseMenu from './CollapseMenu.vue';
 import citiesPosition from "../assets/citiesPosition.json"
 
+const props = defineProps({
+  type: {
+    default:'npp'
+  },
+  year: 2022
+})
 // 创建地图
 let scene = null
 // 
@@ -70,7 +71,7 @@ function initMap() {
   legend.onAdd = () => {
     let div = DOM.create('div', 'info legend')
     let grades = [0, '400', '700', '1000', '>2000', 'g/ (m2·a)']
-    let grades2 = [0, 45, 55, 60, 65,'']
+    let grades2 = [0, 45, 55, 60, 65, '']
     let colors = ['rgb(194, 82, 60)', 'rgb(242, 191, 12)', 'rgb(77, 217, 67)', 'rgb(23, 181, 104)', 'rgb(11, 44, 123)'];
     let colors2 = ["#681f86", "#be0612", "#ec7d3c", "#2f8af0", "#1aaf54"];
 
@@ -112,15 +113,9 @@ function initMap() {
   scene.addControl(legend)
 }
 
-// 更新地图函数
-function updateLayers(option) {
-  let defaultOption = {
-    type: 'npp',
-    year: 2022
-  }
-  option = Object.assign(defaultOption, option)
-  loadMaskLayer(option.year)
-}
+watch(()=>props.year,(newValue)=>{
+  loadMaskLayer(newValue)
+})
 
 // 1.加载 多城市指数 相关图层
 function loadCitiesLayer() {
@@ -131,7 +126,7 @@ function loadCitiesLayer() {
   scene.on('loaded', async () => {
     // 添加点图层
     await initMarkers()
-   
+
     // 为点图层添加LayerPopup
     addLayerPopup(scene.getLayerByName("pointLayer_city"))
 
@@ -295,25 +290,13 @@ onMounted(() => {
 </script>
 
 <style scoped lang="scss">
-.container {
-  height: calc(100vh - 60px);
-
+#map {
+  height: 100%;
   position: relative;
-  overflow: hidden;
-
-  .collapse-menu {
-    position: absolute;
-    z-index: 10;
-  }
-
-  #map {
-    height: 100%;
-    position: relative;
-  }
 }
 
 @media screen and (max-width:800px) {
-  :deep() .l7-control-container{
+  :deep() .l7-control-container {
     display: none;
   }
 }

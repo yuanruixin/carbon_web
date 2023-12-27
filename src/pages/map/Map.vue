@@ -1,25 +1,53 @@
 <template>
-  <div>
-    <ChinaMap></ChinaMap>
+  <div class="map-container">
+    <CollapseMenu class="collapse-menu" @update-map="updateLayers"></CollapseMenu>
+    <div class="map">
+      <ChinaMap v-if="mapArea === 'china'" v-bind="ChinaMapOption"></ChinaMap>
+      <ForestChange v-else></ForestChange>
+    </div>
   </div>
 </template>
 
 <script setup>
+import { ref } from 'vue'
+import ForestChange from './components/ForestChange.vue'
 import ChinaMap from './components/ChinaMap.vue';
-import { once } from "@/utils/once.js"
-import { isMobile } from '@/utils/isMobile.js'
+import CollapseMenu from './components/CollapseMenu.vue';
+const mapArea = ref('china')
 
-function mobilePrompt() {
-  if (isMobile())
-    ElMessage({
-      type: 'warning', message: "当前地图对移动端支持暂不稳定，请使用电脑获得更好的体验",
-      offset:60
-    })
+const ChinaMapOption = ref({
+  type: 'npp',
+  year: 2022
+})
+function updateLayers(option) {
+  const area = option.area
+  mapArea.value = area
+
+  if (option.area === 'china') {
+    let defaultOption = {
+      type: 'npp',
+      year: 2022
+    }
+    option = Object.assign(defaultOption, option.detail)
+    ChinaMapOption.value = option
+  }
 }
-
-let func = once(mobilePrompt)
-func()
 
 </script>
 
-<style lang="scss" scoped></style>
+<style lang="scss" scoped>
+.map-container {
+  height: calc(100vh - 60px);
+
+  position: relative;
+  overflow: hidden;
+
+  .collapse-menu {
+    position: absolute;
+    z-index: 10;
+  }
+  .map{
+    height: 100%;
+  }
+}
+</style>

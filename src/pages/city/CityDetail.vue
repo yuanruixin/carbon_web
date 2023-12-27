@@ -175,11 +175,14 @@ function pushWithQuery() {
 
   .chart {
     justify-self: center;
-    width: 90%;
-    aspect-ratio: 1 / 1;
+    width: 90%; 
+  }
+  &.carbon-state .chart{
+    height: 300px;
   }
 
 }
+
 
 @media screen and (max-width: 900px) {
   .container section {
@@ -191,6 +194,8 @@ function pushWithQuery() {
     width: 100%;
     border-radius: 20px;
     box-shadow: 0 0px 2px rgba(0, 0, 0, 0.4);
+    aspect-ratio: 1 / 1;
   }
+  
 }
 </style>
